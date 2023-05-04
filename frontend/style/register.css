@@ -1,0 +1,95 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+   background-image: url(../img/20210114081648_4yaJS.jpeg);
+   background-repeat: no-repeat;
+   background-size: 1950px 1000px;
+   overflow: hidden;
+}
+ .main {
+    width: 500px;
+    height: 650px;
+    margin: 120px auto;
+   background-color:black;
+   opacity:0.5;
+   border-radius:20px 20px;
+   padding-top: 50px;
+ }
+  .title {
+    color: aqua;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 100px;
+ }
+ i {
+    color:gray;
+ }
+ .icon-mima {
+    margin-left: 26px;
+ }
+ .username {
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+ }
+ #username {
+    width: 200px;
+    height: 25px;
+    border: 0;
+    border-bottom: 2px solid gray;
+    background-color:#7f000000;
+    color: #fff;
+    font-size: 20px;
+ }
+ input::placeholder {
+    font-size: 25px;
+ }
+ .password {
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+ }
+ #password {
+    width: 200px;
+    height: 25px;
+    border: 0;
+    border-bottom: 2px solid gray;
+    background-color:#7f000000;
+    color: #fff;
+    font-size: 20px;
+ }
+.register {
+   height: 40px;
+   text-align: center;
+   line-height: 40px;
+   margin-top: 20px;
+}
+.register-btn {
+width: 238px;
+height: 30px;
+font-size: 18px;
+border-radius: 10px;
+background: linear-gradient(100deg, #9b460a, #6c9e15);
+font-weight: 700;
+}
+.register-btn:hover {
+cursor: pointer;
+}
+.usernamewarn {
+ background-color: #7f000000;
+ color: red;
+ margin-left: 168px;
+ font-size: 18px;
+}
+.passwordwarn {
+ background-color: #7f000000;
+ color: red;
+ margin-left: 168px;
+ font-size: 18px;
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小米登录</title>
+    <link rel="stylesheet" href="./font-login/iconfont.css">
+    <link rel="stylesheet" href="./style/login.css">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="main">
+     <div class="title">LOGIN</div>
+       <div class="username">
+        <i class="iconfont icon-yonghuming"></i>&nbsp;&nbsp;
+          <input type="text" id="username" placeholder="Username">
+        </div>
+        <span class="usernamewarn"></span>
+        <div class="password">
+           <i class="iconfont icon-mima"></i>&nbsp;&nbsp;
+           <input type="password" id="password" placeholder="Password">
+           <i class="iconfont icon-mimayincang change"></i>
+        </div>
+        <span class="passwordwarn"></span>
+         <div class="login">
+            <button class="login-btn">登录</button>
+         </div>
+         <!-- <div class="register">
+            <button class="register-btn">注册</button>
+         </div> -->
+         <div class="forget">
+           忘记密码?
+         </div>
+    </div>
+    <script src="./axios-js/axios.js"></script>
+    <script>
+         let input_username=document.querySelector('#username')
+         let input_password=document.querySelector('#password')
+         document.querySelector('.change').addEventListener('click',function() {
+            if(input_password.type=='password') {
+               this.classList.remove('icon-mimayincang')
+               this.classList.add('icon-mimaxianshi')
+               input_password.type='text'
+            }
+            else {
+               this.classList.remove('icon-mimaxianshi')
+               this.classList.add('icon-mimayincang')
+               input_password.type='password'
+            }
+         })
+       let login=document.querySelector('.login-btn')
+      //  let register=document.querySelector('.register-btn')
+       login.addEventListener('click',function() {
+         axios({
+         url:'http://49.232.144.53/mi/sigin',
+         method:'post',
+         data: {id:input_username.value,password:input_password.value},
+       }).then(res=>{
+         //成功回调
+          if(res.status==200) {
+            alert('登录成功!')
+            location.href='http://49.232.144.53/'
+          }
+          else if (res.status!==200) {
+                  alert('登录失败!')
+               }
+       })
+       })
+      //  register.addEventListener('click',function() {
+      //    location.href='http://49.232.144.53/mi/login/register.html'
+      //  })
+    </script>
+</body>
+</html>
