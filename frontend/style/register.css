@@ -84,12 +84,12 @@ cursor: pointer;
 .usernamewarn {
  background-color: #7f000000;
  color: red;
- margin-left: 168px;
+ margin-left: 40px;
  font-size: 18px;
 }
 .passwordwarn {
  background-color: #7f000000;
  color: red;
- margin-left: 168px;
+ margin-left: 60px;
  font-size: 18px;
 }

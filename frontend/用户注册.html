@@ -14,7 +14,7 @@
      <div class="title">REGISTER</div>
        <div class="username">
         <i class="iconfont icon-yonghuming"></i>&nbsp;&nbsp;
-          <input type="text" id="username" placeholder="Username">
+          <input type="text" id="username" placeholder="Username" maxlength="15">
         </div>
         <span class="usernamewarn"></span>
         <div class="password">
@@ -44,8 +44,29 @@
             }
          })
          let register=document.querySelector('.register-btn')
+         let usernamewarn=document.querySelector('.usernamewarn')
+         let passwordwarn=document.querySelector('.passwordwarn')
+         let userReg=/^[\u4E00-\u9FA5A-Za-z0-9]{3,10}$/
+            let passwordReg=/^[a-zA-Z0-9]{6,15}$/
          register.addEventListener('click',function() {
-            axios({
+            //正则判断
+            if((!userReg.test(input_username.value))&&passwordReg.test(input_password.value)) {
+                  usernamewarn.innerText='用户名必须为中文或大小写英文或中文且长度为3~10'
+                  return false
+            }
+            else if((!passwordReg.test(input_password.value))&&userReg.test(input_username.value)) {
+                  passwordwarn.innerText='密码必须为大小写英文和数字且长度为6~15'
+                  return false
+            }
+            else if((!userReg.test(input_username.value))&&(!passwordReg.test(input_password.value))) {
+               usernamewarn.innerText='用户名必须为中文或大小写英文或中文且长度为3~10'
+               passwordwarn.innerText='密码必须为大小写英文和数字且长度为6~15'
+               return false
+            }
+            else if(userReg.test(input_username.value)&&passwordReg.test(input_password.value)) {
+               usernamewarn.innerText=''
+               passwordwarn.innerText=''
+               axios({
                url:'http://49.232.144.53/mi/sigup',
                method:'post',
                data: {name:input_username.value,password:input_password.value},
@@ -58,7 +79,9 @@
                   alert('注册失败!')
                }
             })
+            }
          })
+         
     </script>
 </body>
 </html>
