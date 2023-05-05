@@ -139,9 +139,9 @@
                         <img src="./images/a687e796bb4879cd0e93867177f800da.webp">
                         <h3>Xiaomi MIX Fold 2</h3>
                         <p class="introduce">超轻薄折叠机身设计，小米自研微水滴形态转轴</p>
-                        <p class="price">8999元起</p>
+                        <p class="price">8999元起<del><span>9000元</span></del></p>
                     </a></li>
-                    <li><a href="#">
+                    <!-- <li><a href="#">
                         <img src="./images/202208101511_488638d8f8d5dbcf3b66cd82703ecfb9.webp">
                         <h3>Redmi K50 至尊版</h3>
                         <p class="introduce">骁龙8+ | 1.5K 高清直屏</p>
@@ -182,7 +182,7 @@
                         <h3>Redmi Note 11T Pro</h3>
                         <p class="introduce">天玑8100|真旗舰芯</p>
                         <p class="price">1599元起 <del><span>1799元</span></del></p>
-                    </a></li>
+                    </a></li> -->
                 </ul>
             </div>
         </div>
@@ -280,6 +280,7 @@
    <div class="BackTop" style="display: none;">
            <img src="./images/totop.png">
    </div>
+   <script src="./axios-js/axios.js"></script>
     <script>
         let arr=[
             {url:'./images/053d963a35ffe0654dfc2ac3d20466ee.jpg'},
@@ -394,6 +395,27 @@
     })
     document.querySelector('.register').addEventListener('click',function () {
         location.href='http://49.232.144.53/mi/login/register.html'
+    })
+    /* 封装渲染函数 */
+    const renderData = arr=>{
+        document.querySelector('.phone-list-bottom-right ul').innerHTML = arr.map(item=>`
+        <li>
+            <a href="#">
+                        <img src="${item.path}">
+                        <h3>${item.name}</h3>
+                        <p class="introduce">${item.introduce}</p>
+                        <p class="price">${item.price1}元起</p><del><span>${item.price2}元</span></del></p>
+            </a>
+        </li> 
+        `).join('')
+    }
+    axios({
+        url:'http://49.232.144.53/mi/init',
+        method:'get',
+    }).then(res=>{
+        //成功回调
+        console.log(res)
+        renderData(res.data)
     })
     </script>
 </body>
