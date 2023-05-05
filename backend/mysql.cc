@@ -4,12 +4,14 @@
 #include"log.hpp"
 #include"until.hpp"
 #include"Mysql.hpp"
+#include"Md5.hpp"
 #include<jsoncpp/json/json.h>
 #include<functional>
 #include<unordered_map>
 #include<vector>
 #define Login "/mi/sigin"
 #define Register "/mi/sigup"
+#define INIT "/mi/init"
 class TcpServer
 {
 public:
@@ -38,6 +40,7 @@ private:
     int _port;
     MY_LOG _log;
    MY_MYSQL:: mysql _mysql;
+   Md5Encode _md5;//加密
     void set_func()
     {
         func_t func = std::bind(&TcpServer::_login,this,std::placeholders::_1,std::placeholders::_2);
@@ -46,6 +49,35 @@ private:
         func = std::bind(&TcpServer::_register,this,std::placeholders::_1,std::placeholders::_2);
         server.Post(Register,func);
         server.Get(Register,func);
+        func = std::bind(&TcpServer::_init,this,std::placeholders::_1,std::placeholders::_2);
+        server.Get(INIT,func);
+    }
+    void _init(const httplib::Request& req, httplib::Response&rep)//初始化网页
+    {
+        std::string query = "select * from mi_info";
+         std::vector<std::vector<std::string>> v;
+        if(!_mysql.query(query,v))
+        {
+            rep.status = 500;
+            _log.log(DEBUG,"init:插入失败 status:500");
+            return;
+        }
+        Json::Value arry;
+        int n = v.size();
+        for(int i = 0;i<n;i++)
+        {
+            Json::Value root;
+            root["name"] = v[i][0];
+            root["introduce"] = v[i][1];
+            root["price1"] = v[i][2];
+            root["price2"] = v[i][3];
+            root["path"] = v[i][4];
+            arry.append(root);
+        }
+          std::string json = arry.toStyledString();
+         rep.status = 200;   
+         rep.set_content(json.c_str(),"application/json; charset=UTF-8");
+
     }
     void _register(const httplib::Request& req, httplib::Response&rep)//注册
     {
@@ -59,14 +91,17 @@ private:
             return;
         }
         std::string password = root.get("password","null").asString();
+        password = _md5.Encode(password);//通过md5进行加密
         std::string name = root.get("name","null").asString();
+        std::cout<<"password:"<<password<<std::endl;
+        std::cout<<"name:"<<name<<std::endl;
         if(password=="null" || name=="null")
         {
             rep.status = 400;
             return;
         }
-        std::cout<<"name:"<<name<<" password:"<<password<<std::endl;
-        body = "(\'" + name + "\'," + password + ")";
+        //std::cout<<"name:"<<name<<" password:"<<password<<std::endl;
+        body = "(\'" + name + "\'," +"\'" +password + "\')";
         std::string _query = "insert into users(name,password) values"+body;
         if(!_mysql.query(_query.c_str()))
         {
@@ -126,8 +161,9 @@ private:
        
         std::string id = root.get("id","null").asString();
         std::string password = root.get("password","null").asString();
+        password = _md5.Encode(password);
         std::vector<std::vector<std::string>> v;
-        std::string _query = "select id from users where id=" +id;
+        std::string _query = "select id from users where id=\'"+id+"\'";
         _log.log(DEBUG,"id:%s ",id.c_str());
         //与数据库进行比对
         if(!_mysql.query(_query.c_str(),v))
@@ -143,7 +179,8 @@ private:
          _log.log(DEBUG,"id 错误!");
          return;
         }
-        _query = "select password from users where password="+password;
+        _query = "select password from users where password=\'"+password+"\'";
+        std::cout<<_query<<std::endl;
         v.clear();
         if(!_mysql.query(_query.c_str(),v))
         {
@@ -151,7 +188,7 @@ private:
            _log.log(DEBUG,"status:201");
             return;
         }
-        std::cout<<"密码:"<<password<<std::endl;
+        //std::cout<<"密码:"<<password<<std::endl;
         if(v[0][0]!=password)
         {
             rep.status = 201;
